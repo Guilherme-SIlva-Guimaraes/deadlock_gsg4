@@ -1,0 +1,14 @@
+Script started on 2026-11-13 11:45:42-03:00 [COMMAND="date; whoami; pwd; ls -a; make clean; make; ./banker; echo exit=$?; make clean; ls -a" <not executed on terminal>]
+Fri Nov 13 11:45:42 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .gitignore	README.md  evidencias.log
+..  Makefile	banker.c   material_recebido
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+exit=0
+rm -f banker
+.   .gitignore	README.md  evidencias.log
+..  Makefile	banker.c   material_recebido
+
+Script done on 2026-11-13 11:45:44-03:00 [COMMAND_EXIT_CODE="0"]

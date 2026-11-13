@@ -1,1 +1,40 @@
-# deadlock_gsg4
+# Algoritmo de Banker
+
+Implementacao do algoritmo de Banker (Silberschatz, Operating System Concepts, 10a edicao, p. P-45) para a disciplina de Infraestrutura de Software, CESAR School.
+
+O numero de clientes e o numero de tipos de recursos nao sao fixos: o numero de recursos vem dos argumentos do programa e o numero de clientes vem do numero de linhas do arquivo customer.txt.
+
+## Compilar
+
+```
+make
+```
+
+Gera o executavel `banker`. Para remover o executavel:
+
+```
+make clean
+```
+
+## Executar
+
+Cada argumento e o numero de instancias de um tipo de recurso. Exemplo com tres tipos de recurso (10, 5 e 7 instancias):
+
+```
+./banker 10 5 7
+```
+
+O programa le dois arquivos do diretorio atual:
+
+- `customer.txt`: uma linha por cliente, com o maximo de cada recurso separado por virgula. Exemplo: `7,5,3`.
+- `commands.txt`: um comando por linha. `RQ <cliente> <r1> <r2> ...` pede recursos, `RL <cliente> <r1> <r2> ...` libera recursos e `*` imprime o estado atual.
+
+O resultado e gravado em `result.txt`.
+
+## Erros
+
+Em caso de erro (numero de argumentos diferente do numero de colunas dos arquivos, arquivo inexistente ou com formato invalido) o programa escreve a mensagem em stderr, termina com codigo diferente de zero e nao cria `result.txt`.
+
+## Status
+
+Em desenvolvimento. Este README sera completado nos proximos commits.
