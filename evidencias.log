@@ -365,3 +365,89 @@ rm -f banker
  [31mM[m evidencias.log
 
 Script done on 2026-11-15 11:58:45-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-15 15:28:22-03:00 [COMMAND="bash /tmp/sessao_bloco5.sh" <not executed on terminal>]
+Sun Nov 15 15:28:22 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .git	    .gitignore	README.md  evidencias.log
+..  .gitattributes  Makefile	banker.c   material_recebido
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+--- exemplo oficial: saida do programa contra o result.txt do professor
+0
+diff vazio
+cmp sem diferencas
+ 755 result.txt
+ 755 /mnt/c/Users/guilherme/OneDrive/Documentos/gsg4/material_recebido/result.txt
+1510 total
+Allocate to customer 0 the resources 0 2 1$
+Allocate to customer 2 the resources 3 0 2$
+Allocate to customer 1 the resources 2 0 0$
+Allocate to customer 4 the resources 0 0 2$
+Release from customer 0 the resources 0 1 1$
+Allocate to customer 3 the resources 2 1 1$
+MAXIMUM   |   ALLOCATION  |   NEED$
+7 5 3     |   0 1 0       |   7 4 3 $
+3 2 2     |   2 0 0       |   1 2 2 $
+9 0 2     |   3 0 2       |   6 0 0 $
+2 2 2     |   2 1 1       |   0 1 1 $
+4 3 3     |   0 0 2       |   4 3 1 $
+AVAILABLE 3 3 2 $
+The resources 3 3 2 are not enough to customer 4 request 4 0 0 $
+Allocate to customer 1 the resources 1 0 2$
+The customer 0 request 0 2 0 was denied because result in an unsafe state$
+The customer 2 request 0 1 0 was denied because exceed its maximum allocation$
+--- erro nao cria result.txt
+Erro: customer.txt linha 1: formato invalido, esperado 2 numeros inteiros nao negativos separados por virgula, sem espacos
+exit=1
+ls: cannot access 'result.txt': No such file or directory
+--- testes de RQ, RL e * (binario normal)
+=== Exemplo oficial do enunciado, saida completa ===
+[OK] oficial completo, cmp byte a byte contra o result.txt do professor | exit=0
+        cmp: sem diferencas (755 bytes)
+=== Casos limite de RQ e RL ===
+[OK] RQ igual ao need (borda D == P) | ./banker 5 | exit=0
+[OK] RQ maior que o need por 1 | ./banker 9 | exit=0
+[OK] RQ igual ao disponivel | ./banker 3 | exit=0
+[OK] RQ maior que o disponivel mas dentro do need | ./banker 4 | exit=0
+[OK] RQ que deixa estado inseguro | ./banker 10 | exit=0
+[OK] estado volta ao normal apos negar por inseguro | ./banker 10 | exit=0
+[OK] pedido de zero | ./banker 5 | exit=0
+[OK] liberacao de zero | ./banker 5 | exit=0
+[OK] duas instancias seguidas do mesmo pedido | ./banker 5 | exit=0
+[OK] RL exatamente o que possui | ./banker 5 | exit=0
+[OK] dois recursos, exceder o maximo | ./banker 3 3 | exit=0
+[OK] dois recursos, um recurso insuficiente | ./banker 2 5 | exit=0
+[OK] valores perto de INT_MAX | ./banker 2147483647 | exit=0
+[OK] commands vazio gera result.txt vazio | ./banker 5 | exit=0
+[OK] exceder o maximo tem prioridade sobre faltar recurso | ./banker 2 | exit=0
+[OK] customer.txt oficial sem newline final | ./banker 10 5 7 | exit=0
+=== Comando * ===
+[OK] * no inicio (nada alocado) | ./banker 10 5 7 | exit=0
+[OK] * dois seguidos | ./banker 5 | exit=0
+[OK] * depois de pedido negado por inseguro (estado revertido) | ./banker 10 | exit=0
+[OK] * depois de pedido negado por exceder o maximo | ./banker 10 | exit=0
+[OK] * depois de RL | ./banker 5 | exit=0
+[OK] * como unico comando entre dois pedidos | ./banker 5 5 | exit=0
+[OK] * com valores grandes | ./banker 2147483647 | exit=0
+=== Erro durante a execucao ===
+[OK] RL maior que o alocado | ./banker 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 2: cliente 0 tenta liberar mais recursos do que possui
+[OK] RL sem ter nada alocado | ./banker 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 0 tenta liberar mais recursos do que possui
+[OK] RL maior em apenas um dos recursos | ./banker 5 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 2: cliente 0 tenta liberar mais recursos do que possui
+
+RESUMO: 27 OK, 0 FALHOU
+--- testes de RQ, RL e * (AddressSanitizer)
+RESUMO: 27 OK, 0 FALHOU
+--- regressao dos testes de entrada (normal)
+RESUMO: 65 OK, 0 FALHOU
+--- regressao dos testes de entrada (AddressSanitizer)
+RESUMO: 65 OK, 0 FALHOU
+--- teste unitario de is_safe
+
+RESUMO: 0 falhas
+rm -f banker
+
+Script done on 2026-11-15 15:28:27-03:00 [COMMAND_EXIT_CODE="0"]

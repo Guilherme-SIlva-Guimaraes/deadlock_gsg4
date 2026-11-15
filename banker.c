@@ -95,6 +95,14 @@ static void print_vector(FILE *out, const int *v, int n)
         fprintf(out, j == 0 ? "%d" : " %d", v[j]);
 }
 
+static void print_vector_spaced(FILE *out, const int *v, int n)
+{
+    int j;
+
+    for (j = 0; j < n; j++)
+        fprintf(out, "%d ", v[j]);
+}
+
 static int is_safe(const State *s)
 {
     size_t r = (size_t)s->num_resources;
@@ -211,6 +219,25 @@ static int release_resources(State *s, const Command *cmd, FILE *out)
     return 0;
 }
 
+static void print_status(const State *s, FILE *out)
+{
+    int r = s->num_resources;
+    int i;
+
+    fputs("MAXIMUM   |   ALLOCATION  |   NEED\n", out);
+    for (i = 0; i < s->num_customers; i++) {
+        print_vector_spaced(out, &s->max[i * r], r);
+        fputs("    |   ", out);
+        print_vector_spaced(out, &s->allocation[i * r], r);
+        fputs("      |   ", out);
+        print_vector_spaced(out, &s->need[i * r], r);
+        fputc('\n', out);
+    }
+    fputs("AVAILABLE ", out);
+    print_vector_spaced(out, s->available, r);
+    fputc('\n', out);
+}
+
 static int run_commands(const Input *in, State *s, FILE *out)
 {
     int i;
@@ -222,6 +249,8 @@ static int run_commands(const Input *in, State *s, FILE *out)
             rc = request_resources(s, &in->commands[i], out);
         else if (in->commands[i].type == CMD_RL)
             rc = release_resources(s, &in->commands[i], out);
+        else
+            print_status(s, out);
         if (rc < 0)
             return -1;
     }
