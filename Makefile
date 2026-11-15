@@ -8,7 +8,10 @@ all: $(TARGET)
 $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 
+test: all
+	bash tests/run_all.sh
+
 clean:
 	rm -f $(TARGET)
 
-.PHONY: all clean
+.PHONY: all clean test

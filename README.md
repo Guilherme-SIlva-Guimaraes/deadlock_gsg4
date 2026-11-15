@@ -35,6 +35,22 @@ O resultado e gravado em `result.txt`.
 
 Em caso de erro (numero de argumentos diferente do numero de colunas dos arquivos, arquivo inexistente ou com formato invalido) o programa escreve a mensagem em stderr, termina com codigo diferente de zero e nao cria `result.txt`.
 
+Se um `RL` tentar liberar mais recursos do que o cliente possui, o programa tambem encerra com erro e remove o `result.txt` ja gravado.
+
+## Testes
+
+```
+make test
+```
+
+Compila o programa, compila uma versao com AddressSanitizer e UBSan e roda, com as duas, os scripts da pasta `tests`:
+
+- `tests/testes_entradas.sh`: argumentos invalidos, `customer.txt` e `commands.txt` ausentes ou mal formatados, casos limite.
+- `tests/testes_execucao.sh`: comparacao byte a byte da saida do exemplo do enunciado com `tests/exemplo/result.txt`, casos limite de `RQ`, `RL` e `*`, e erros durante a execucao.
+- `tests/teste_estado.c`: teste unitario da verificacao de estado seguro.
+
+O comando termina com codigo diferente de zero se algum teste falhar.
+
 ## Status
 
 Em desenvolvimento. Este README sera completado nos proximos commits.

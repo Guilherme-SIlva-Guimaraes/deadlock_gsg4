@@ -451,3 +451,47 @@ RESUMO: 0 falhas
 rm -f banker
 
 Script done on 2026-11-15 15:28:27-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-15 16:23:33-03:00 [COMMAND="bash /tmp/sessao_bloco6.sh" <not executed on terminal>]
+Sun Nov 15 16:23:33 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .git	    .gitignore	README.md  evidencias.log     tests
+..  .gitattributes  Makefile	banker.c   material_recebido
+tests:
+exemplo  run_all.sh  teste_estado.c  testes_entradas.sh  testes_execucao.sh
+
+tests/exemplo:
+commands.txt  customer.txt  result.txt
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+bash tests/run_all.sh
+##### is_safe (AddressSanitizer e UBSan)
+
+RESUMO: 0 falhas
+##### testes_entradas com banker
+RESUMO: 65 OK, 0 FALHOU
+##### testes_execucao com banker
+RESUMO: 27 OK, 0 FALHOU
+##### testes_entradas com banker_asan
+RESUMO: 65 OK, 0 FALHOU
+##### testes_execucao com banker_asan
+RESUMO: 27 OK, 0 FALHOU
+##### TUDO OK
+rc=0
+--- verificacao de que os testes detectam um erro (copia com mensagem alterada)
+rc=2
+RESUMO: 0 falhas
+RESUMO: 65 OK, 0 FALHOU
+[FALHOU] oficial completo, cmp byte a byte contra o result.txt do professor | exit=0
+[FALHOU] RQ maior que o disponivel mas dentro do need | /tmp/mut/banker 4 | exit=0
+[FALHOU] dois recursos, um recurso insuficiente | /tmp/mut/banker 2 5 | exit=0
+RESUMO: 24 OK, 3 FALHOU
+RESUMO: 65 OK, 0 FALHOU
+[FALHOU] oficial completo, cmp byte a byte contra o result.txt do professor | exit=0
+[FALHOU] RQ maior que o disponivel mas dentro do need | /tmp/tmp.T2K5XFhyKs/banker_asan 4 | exit=0
+[FALHOU] dois recursos, um recurso insuficiente | /tmp/tmp.T2K5XFhyKs/banker_asan 2 5 | exit=0
+RESUMO: 24 OK, 3 FALHOU
+##### HOUVE FALHAS
+rm -f banker
+
+Script done on 2026-11-15 16:23:47-03:00 [COMMAND_EXIT_CODE="0"]
