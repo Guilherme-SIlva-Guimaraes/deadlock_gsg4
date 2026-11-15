@@ -8,12 +8,14 @@
 
 #define CUSTOMER_FILE "customer.txt"
 #define COMMANDS_FILE "commands.txt"
+#define RESULT_FILE "result.txt"
 
 typedef enum { CMD_RQ, CMD_RL, CMD_STATUS } CmdType;
 
 typedef struct {
     CmdType type;
     int customer;
+    int line;
     int *amount;
 } Command;
 
@@ -85,7 +87,15 @@ static int state_init(State *s, const Input *in)
     return 0;
 }
 
-int is_safe(const State *s)
+static void print_vector(FILE *out, const int *v, int n)
+{
+    int j;
+
+    for (j = 0; j < n; j++)
+        fprintf(out, j == 0 ? "%d" : " %d", v[j]);
+}
+
+static int is_safe(const State *s)
 {
     size_t r = (size_t)s->num_resources;
     long long *work = malloc(r * sizeof(long long));
@@ -127,6 +137,95 @@ done:
     free(work);
     free(finished);
     return ret;
+}
+
+static int request_resources(State *s, const Command *cmd, FILE *out)
+{
+    int r = s->num_resources;
+    int base = cmd->customer * r;
+    int safe;
+    int j;
+
+    for (j = 0; j < r; j++) {
+        if (cmd->amount[j] > s->need[base + j]) {
+            fprintf(out, "The customer %d request ", cmd->customer);
+            print_vector(out, cmd->amount, r);
+            fputs(" was denied because exceed its maximum allocation\n", out);
+            return 0;
+        }
+    }
+    for (j = 0; j < r; j++) {
+        if (cmd->amount[j] > s->available[j]) {
+            fputs("The resources ", out);
+            print_vector(out, s->available, r);
+            fprintf(out, " are not enough to customer %d request ", cmd->customer);
+            print_vector(out, cmd->amount, r);
+            fputs(" \n", out);
+            return 0;
+        }
+    }
+    for (j = 0; j < r; j++) {
+        s->available[j] -= cmd->amount[j];
+        s->allocation[base + j] += cmd->amount[j];
+        s->need[base + j] -= cmd->amount[j];
+    }
+    safe = is_safe(s);
+    if (safe < 0)
+        return fail("memoria insuficiente");
+    if (!safe) {
+        for (j = 0; j < r; j++) {
+            s->available[j] += cmd->amount[j];
+            s->allocation[base + j] -= cmd->amount[j];
+            s->need[base + j] += cmd->amount[j];
+        }
+        fprintf(out, "The customer %d request ", cmd->customer);
+        print_vector(out, cmd->amount, r);
+        fputs(" was denied because result in an unsafe state\n", out);
+        return 0;
+    }
+    fprintf(out, "Allocate to customer %d the resources ", cmd->customer);
+    print_vector(out, cmd->amount, r);
+    fputc('\n', out);
+    return 0;
+}
+
+static int release_resources(State *s, const Command *cmd, FILE *out)
+{
+    int r = s->num_resources;
+    int base = cmd->customer * r;
+    int j;
+
+    for (j = 0; j < r; j++) {
+        if (cmd->amount[j] > s->allocation[base + j])
+            return fail("%s linha %d: cliente %d tenta liberar mais recursos do que possui",
+                        COMMANDS_FILE, cmd->line, cmd->customer);
+    }
+    for (j = 0; j < r; j++) {
+        s->available[j] += cmd->amount[j];
+        s->allocation[base + j] -= cmd->amount[j];
+        s->need[base + j] += cmd->amount[j];
+    }
+    fprintf(out, "Release from customer %d the resources ", cmd->customer);
+    print_vector(out, cmd->amount, r);
+    fputc('\n', out);
+    return 0;
+}
+
+static int run_commands(const Input *in, State *s, FILE *out)
+{
+    int i;
+    int rc;
+
+    for (i = 0; i < in->num_commands; i++) {
+        rc = 0;
+        if (in->commands[i].type == CMD_RQ)
+            rc = request_resources(s, &in->commands[i], out);
+        else if (in->commands[i].type == CMD_RL)
+            rc = release_resources(s, &in->commands[i], out);
+        if (rc < 0)
+            return -1;
+    }
+    return 0;
 }
 
 static int parse_number(char **p, char sep, int *out)
@@ -347,6 +446,7 @@ static int read_commands(Input *in)
             in->commands = tmp;
             rows_cap = new_cap;
         }
+        cmd.line = line_no;
         in->commands[in->num_commands++] = cmd;
     }
     if (ferror(f)) {
@@ -364,7 +464,9 @@ int main(int argc, char **argv)
 {
     Input in = {0};
     State st = {0};
+    FILE *out;
     char *p;
+    int rc;
     int i;
     int v;
 
@@ -395,7 +497,19 @@ int main(int argc, char **argv)
         free_input(&in);
         return 1;
     }
+    out = fopen(RESULT_FILE, "w");
+    if (out == NULL) {
+        fail("nao foi possivel criar %s", RESULT_FILE);
+        state_free(&st);
+        free_input(&in);
+        return 1;
+    }
+    rc = run_commands(&in, &st, out);
+    if (fclose(out) != 0 && rc == 0)
+        rc = fail("falha ao gravar %s", RESULT_FILE);
+    if (rc < 0)
+        remove(RESULT_FILE);
     state_free(&st);
     free_input(&in);
-    return 0;
+    return rc < 0 ? 1 : 0;
 }

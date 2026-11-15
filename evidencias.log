@@ -311,3 +311,57 @@ RESUMO: 65 OK, 0 FALHOU
 rm -f banker
 
 Script done on 2026-11-15 11:24:21-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-15 11:58:37-03:00 [COMMAND="bash /tmp/sessao_bloco4.sh" <not executed on terminal>]
+Sun Nov 15 11:58:37 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .git	    .gitignore	README.md  evidencias.log
+..  .gitattributes  Makefile	banker.c   material_recebido
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+--- testes de RQ e RL (binario normal)
+=== Exemplo oficial do enunciado (sem o comando *, tabela entra no proximo bloco) ===
+[OK] oficial sem tabela, diff byte a byte contra o gabarito | exit=0
+=== Casos limite de RQ e RL ===
+[OK] RQ igual ao need (borda D == P) | ./banker 5 | exit=0
+[OK] RQ maior que o need por 1 | ./banker 9 | exit=0
+[OK] RQ igual ao disponivel | ./banker 3 | exit=0
+[OK] RQ maior que o disponivel mas dentro do need | ./banker 4 | exit=0
+[OK] RQ que deixa estado inseguro | ./banker 10 | exit=0
+[OK] estado volta ao normal apos negar por inseguro | ./banker 10 | exit=0
+[OK] pedido de zero | ./banker 5 | exit=0
+[OK] liberacao de zero | ./banker 5 | exit=0
+[OK] duas instancias seguidas do mesmo pedido | ./banker 5 | exit=0
+[OK] RL exatamente o que possui | ./banker 5 | exit=0
+[OK] dois recursos, exceder o maximo | ./banker 3 3 | exit=0
+[OK] dois recursos, um recurso insuficiente | ./banker 2 5 | exit=0
+[OK] valores perto de INT_MAX | ./banker 2147483647 | exit=0
+[OK] commands vazio gera result.txt vazio | ./banker 5 | exit=0
+[OK] exceder o maximo tem prioridade sobre faltar recurso | ./banker 2 | exit=0
+[OK] customer.txt oficial sem newline final | ./banker 10 5 7 | exit=0
+=== Erro durante a execucao ===
+[OK] RL maior que o alocado | ./banker 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 2: cliente 0 tenta liberar mais recursos do que possui
+[OK] RL sem ter nada alocado | ./banker 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 0 tenta liberar mais recursos do que possui
+[OK] RL maior em apenas um dos recursos | ./banker 5 5 | exit=1 | result.txt=nao
+        stderr: Erro: commands.txt linha 2: cliente 0 tenta liberar mais recursos do que possui
+
+RESUMO: 20 OK, 0 FALHOU
+--- testes de RQ e RL (AddressSanitizer)
+RESUMO: 20 OK, 0 FALHOU
+--- regressao dos testes de entrada (normal)
+RESUMO: 65 OK, 0 FALHOU
+--- regressao dos testes de entrada (AddressSanitizer)
+RESUMO: 65 OK, 0 FALHOU
+--- teste unitario de is_safe
+
+RESUMO: 0 falhas
+rm -f banker
+ [31mM[m .gitignore
+ [31mM[m Makefile
+ [31mM[m README.md
+ [31mM[m banker.c
+ [31mM[m evidencias.log
+
+Script done on 2026-11-15 11:58:45-03:00 [COMMAND_EXIT_CODE="0"]
