@@ -12,3 +12,269 @@ rm -f banker
 ..  Makefile	banker.c   material_recebido
 
 Script done on 2026-11-13 11:45:44-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-15 00:18:18-03:00 [COMMAND="bash /tmp/sessao_bloco2.sh" <not executed on terminal>]
+Sun Nov 15 00:18:18 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .git	    .gitignore	README.md  evidencias.log
+..  .gitattributes  Makefile	banker.c   material_recebido
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+--- build com sanitizers
+--- testes do bloco 2 (binario normal)
+=== Entradas validas ===
+[OK] oficial | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] customer com newline final | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] linhas em branco no fim do customer | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] commands vazio | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] cliente na borda (ultimo) | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] commands com branco no fim | ./banker 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] argumento INT_MAX | ./banker 2147483647 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] argumento zero | ./banker 0 0 0 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] 2 recursos | ./banker 10 5 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] 1 recurso | ./banker 10 | exit=0 | stdout=0 linhas | result.txt=nao
+=== Erros de argumento ===
+[OK] sem argumentos | ./banker  | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: uso: ./banker <instancias do recurso 0> <instancias do recurso 1> ...
+[OK] argumento letras | ./banker abc 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "abc", esperado inteiro nao negativo
+[OK] argumento negativo | ./banker -1 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "-1", esperado inteiro nao negativo
+[OK] argumento com lixo | ./banker 5x 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "5x", esperado inteiro nao negativo
+[OK] argumento vazio | ./banker  5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "", esperado inteiro nao negativo
+[OK] argumento gigante | ./banker 99999999999999999999 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "99999999999999999999", esperado inteiro nao negativo
+[OK] argumento INT_MAX+1 | ./banker 2147483648 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "2147483648", esperado inteiro nao negativo
+[OK] argumento com sinal mais | ./banker +5 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "+5", esperado inteiro nao negativo
+[OK] argumento decimal | ./banker 5.5 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "5.5", esperado inteiro nao negativo
+[OK] poucos argumentos | ./banker 10 5 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 2 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] argumentos demais | ./banker 10 5 7 1 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 4 numeros inteiros nao negativos separados por virgula, sem espacos
+=== Erros em customer.txt ===
+[OK] customer ausente | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: nao foi possivel abrir customer.txt
+[OK] customer vazio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt nao contem nenhum cliente
+[OK] customer so linha em branco | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt nao contem nenhum cliente
+[OK] customer e diretorio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: falha ao ler customer.txt
+[OK] espaco depois da virgula | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] espaco no fim | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] espaco no inicio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo sobrando | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo faltando | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] virgula final | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] virgula inicial | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo vazio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor negativo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor letra | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] CRLF | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] linha em branco no meio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt: linha em branco antes da linha 3
+[OK] erro so na ultima linha | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 3: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] separador ponto e virgula | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor gigante | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] linha longa | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: linha longa demais
+=== Erros em commands.txt ===
+[OK] commands ausente | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: nao foi possivel abrir commands.txt
+[OK] commands e diretorio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: falha ao ler commands.txt
+[OK] comando desconhecido | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] minusculo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] campo faltando | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] campo sobrando | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] cliente 5 (nao existe) | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 5 nao existe (clientes de 0 a 4)
+[OK] cliente muito alto | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 99999 nao existe (clientes de 0 a 4)
+[OK] cliente negativo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] espaco duplo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] espaco no fim | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] tab no lugar do espaco | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] asterisco com espaco | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] asterisco com lixo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] dois asteriscos | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] RL sem nada | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] valor negativo | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] valor letra | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] CRLF | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] linha em branco no meio | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt: linha em branco antes da linha 3
+[OK] erro so na ultima linha | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 3: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] cliente invalido depois de varios validos | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 7: cliente 5 nao existe (clientes de 0 a 4)
+[OK] valor gigante | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] linha longa | ./banker 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: linha longa demais
+
+RESUMO: 65 OK, 0 FALHOU
+--- testes do bloco 2 (AddressSanitizer)
+=== Entradas validas ===
+[OK] oficial | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] customer com newline final | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] linhas em branco no fim do customer | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] commands vazio | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] cliente na borda (ultimo) | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] commands com branco no fim | /tmp/banker_asan 10 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] argumento INT_MAX | /tmp/banker_asan 2147483647 5 7 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] argumento zero | /tmp/banker_asan 0 0 0 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] 2 recursos | /tmp/banker_asan 10 5 | exit=0 | stdout=0 linhas | result.txt=nao
+[OK] 1 recurso | /tmp/banker_asan 10 | exit=0 | stdout=0 linhas | result.txt=nao
+=== Erros de argumento ===
+[OK] sem argumentos | /tmp/banker_asan  | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: uso: /tmp/banker_asan <instancias do recurso 0> <instancias do recurso 1> ...
+[OK] argumento letras | /tmp/banker_asan abc 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "abc", esperado inteiro nao negativo
+[OK] argumento negativo | /tmp/banker_asan -1 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "-1", esperado inteiro nao negativo
+[OK] argumento com lixo | /tmp/banker_asan 5x 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "5x", esperado inteiro nao negativo
+[OK] argumento vazio | /tmp/banker_asan  5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "", esperado inteiro nao negativo
+[OK] argumento gigante | /tmp/banker_asan 99999999999999999999 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "99999999999999999999", esperado inteiro nao negativo
+[OK] argumento INT_MAX+1 | /tmp/banker_asan 2147483648 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "2147483648", esperado inteiro nao negativo
+[OK] argumento com sinal mais | /tmp/banker_asan +5 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "+5", esperado inteiro nao negativo
+[OK] argumento decimal | /tmp/banker_asan 5.5 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: argumento invalido "5.5", esperado inteiro nao negativo
+[OK] poucos argumentos | /tmp/banker_asan 10 5 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 2 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] argumentos demais | /tmp/banker_asan 10 5 7 1 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 4 numeros inteiros nao negativos separados por virgula, sem espacos
+=== Erros em customer.txt ===
+[OK] customer ausente | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: nao foi possivel abrir customer.txt
+[OK] customer vazio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt nao contem nenhum cliente
+[OK] customer so linha em branco | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt nao contem nenhum cliente
+[OK] customer e diretorio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: falha ao ler customer.txt
+[OK] espaco depois da virgula | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] espaco no fim | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] espaco no inicio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo sobrando | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo faltando | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] virgula final | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] virgula inicial | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] campo vazio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor negativo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor letra | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] CRLF | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] linha em branco no meio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt: linha em branco antes da linha 3
+[OK] erro so na ultima linha | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 3: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] separador ponto e virgula | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] valor gigante | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: formato invalido, esperado 3 numeros inteiros nao negativos separados por virgula, sem espacos
+[OK] linha longa | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: customer.txt linha 1: linha longa demais
+=== Erros em commands.txt ===
+[OK] commands ausente | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: nao foi possivel abrir commands.txt
+[OK] commands e diretorio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: falha ao ler commands.txt
+[OK] comando desconhecido | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] minusculo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] campo faltando | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] campo sobrando | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] cliente 5 (nao existe) | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 5 nao existe (clientes de 0 a 4)
+[OK] cliente muito alto | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: cliente 99999 nao existe (clientes de 0 a 4)
+[OK] cliente negativo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] espaco duplo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] espaco no fim | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] tab no lugar do espaco | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] asterisco com espaco | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] asterisco com lixo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] dois asteriscos | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] RL sem nada | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] valor negativo | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] valor letra | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] CRLF | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] linha em branco no meio | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt: linha em branco antes da linha 3
+[OK] erro so na ultima linha | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 3: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] cliente invalido depois de varios validos | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 7: cliente 5 nao existe (clientes de 0 a 4)
+[OK] valor gigante | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: comando invalido, esperado "*", "RQ cliente r1 ..." ou "RL cliente r1 ..." com 3 recursos separados por um espaco
+[OK] linha longa | /tmp/banker_asan 10 5 7 | exit=1 | stdout=0 linhas | result.txt=nao
+        stderr: Erro: commands.txt linha 1: linha longa demais
+
+RESUMO: 65 OK, 0 FALHOU
+rm -f banker
+
+Script done on 2026-11-15 00:18:25-03:00 [COMMAND_EXIT_CODE="0"]
