@@ -278,3 +278,36 @@ RESUMO: 65 OK, 0 FALHOU
 rm -f banker
 
 Script done on 2026-11-15 00:18:25-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-15 11:24:15-03:00 [COMMAND="bash /tmp/sessao_bloco3.sh" <not executed on terminal>]
+Sun Nov 15 11:24:15 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+.   .git	    .gitignore	README.md  evidencias.log
+..  .gitattributes  Makefile	banker.c   material_recebido
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+--- teste unitario do estado e de is_safe (AddressSanitizer e UBSan)
+[OK] exemplo do livro (disponivel 3 3 2) | is_safe=1 esperado=1
+[OK] apos conceder 1 0 2 ao cliente 1 | is_safe=1 esperado=1
+[OK] apos tentar 0 2 0 no cliente 0 (inseguro) | is_safe=0 esperado=0
+[OK] nada alocado | is_safe=1 esperado=1
+[OK] max maior que o total | is_safe=0 esperado=0
+[OK] todos com o maximo alocado | is_safe=1 esperado=1
+[OK] dois clientes travados | is_safe=0 esperado=0
+[OK] um cliente, need igual ao disponivel | is_safe=1 esperado=1
+[OK] fronteira need == disponivel | is_safe=1 esperado=1
+[OK] need maior por 1 | is_safe=0 esperado=0
+[OK] nenhum cliente cabe | is_safe=0 esperado=0
+[OK] so o ultimo cabe primeiro | is_safe=1 esperado=1
+[OK] um recurso insuficiente de dois | is_safe=0 esperado=0
+[OK] valores grandes sem overflow | is_safe=1 esperado=1
+[OK] soma grande perto de INT_MAX | is_safe=0 esperado=0
+
+RESUMO: 0 falhas
+--- regressao dos testes de entrada (binario normal)
+RESUMO: 65 OK, 0 FALHOU
+--- regressao dos testes de entrada (AddressSanitizer)
+RESUMO: 65 OK, 0 FALHOU
+rm -f banker
+
+Script done on 2026-11-15 11:24:21-03:00 [COMMAND_EXIT_CODE="0"]

@@ -26,6 +26,15 @@ typedef struct {
     Command *commands;
 } Input;
 
+typedef struct {
+    int num_resources;
+    int num_customers;
+    const int *max;
+    int *available;
+    int *allocation;
+    int *need;
+} State;
+
 static int fail(const char *fmt, ...)
 {
     va_list ap;
@@ -47,6 +56,77 @@ static void free_input(Input *in)
     free(in->commands);
     free(in->max);
     free(in->total);
+}
+
+static void state_free(State *s)
+{
+    free(s->available);
+    free(s->allocation);
+    free(s->need);
+}
+
+static int state_init(State *s, const Input *in)
+{
+    size_t r = (size_t)in->num_resources;
+    size_t cells = (size_t)in->num_customers * r;
+
+    s->num_resources = in->num_resources;
+    s->num_customers = in->num_customers;
+    s->max = in->max;
+    s->available = malloc(r * sizeof(int));
+    s->allocation = calloc(cells, sizeof(int));
+    s->need = malloc(cells * sizeof(int));
+    if (s->available == NULL || s->allocation == NULL || s->need == NULL) {
+        state_free(s);
+        return fail("memoria insuficiente");
+    }
+    memcpy(s->available, in->total, r * sizeof(int));
+    memcpy(s->need, in->max, cells * sizeof(int));
+    return 0;
+}
+
+int is_safe(const State *s)
+{
+    size_t r = (size_t)s->num_resources;
+    long long *work = malloc(r * sizeof(long long));
+    char *finished = calloc((size_t)s->num_customers, 1);
+    int count = 0;
+    int progress;
+    int fits;
+    int i;
+    int j;
+    int ret = -1;
+
+    if (work == NULL || finished == NULL)
+        goto done;
+    for (j = 0; j < s->num_resources; j++)
+        work[j] = s->available[j];
+    do {
+        progress = 0;
+        for (i = 0; i < s->num_customers; i++) {
+            if (finished[i])
+                continue;
+            fits = 1;
+            for (j = 0; j < s->num_resources; j++) {
+                if (s->need[i * s->num_resources + j] > work[j]) {
+                    fits = 0;
+                    break;
+                }
+            }
+            if (!fits)
+                continue;
+            for (j = 0; j < s->num_resources; j++)
+                work[j] += s->allocation[i * s->num_resources + j];
+            finished[i] = 1;
+            count++;
+            progress = 1;
+        }
+    } while (progress && count < s->num_customers);
+    ret = (count == s->num_customers);
+done:
+    free(work);
+    free(finished);
+    return ret;
 }
 
 static int parse_number(char **p, char sep, int *out)
@@ -283,6 +363,7 @@ done:
 int main(int argc, char **argv)
 {
     Input in = {0};
+    State st = {0};
     char *p;
     int i;
     int v;
@@ -310,6 +391,11 @@ int main(int argc, char **argv)
         free_input(&in);
         return 1;
     }
+    if (state_init(&st, &in) < 0) {
+        free_input(&in);
+        return 1;
+    }
+    state_free(&st);
     free_input(&in);
     return 0;
 }
