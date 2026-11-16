@@ -40,6 +40,7 @@ setup; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "custome
 setup; printf '7,5,3\n3,2,2\n\n\n' > customer.txt; printf 'RQ 1 0 0 0\n' > commands.txt; run "linhas em branco no fim do customer" 0 10 5 7
 setup; : > commands.txt; run "commands vazio" 0 10 5 7
 setup; printf 'RQ 4 0 0 0\n' > commands.txt; run "cliente na borda (ultimo)" 0 10 5 7
+setup; { head -c 130 /dev/zero | tr '\0' '0'; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n'; } > customer.txt; run "linha com exatamente o limite de tamanho" 0 10 5 7
 setup; printf 'RQ 0 0 0 0\n*\n\n' > commands.txt; run "commands com branco no fim" 0 10 5 7
 setup; run "argumento INT_MAX" 0 2147483647 5 7
 setup; printf 'RQ 0 0 0 0\n' > commands.txt; run "argumento zero" 0 0 0 0
@@ -80,6 +81,10 @@ setup; printf '7,5,3\n3,2,2\n9,0\n' > customer.txt; run "erro so na ultima linha
 setup; printf '7;5;3\n' > customer.txt; run "separador ponto e virgula" 1 10 5 7
 setup; printf '99999999999999999999,5,3\n' > customer.txt; run "valor gigante" 1 10 5 7
 setup; head -c 5000 /dev/zero | tr '\0' '7' > customer.txt; run "linha longa" 1 10 5 7
+setup; { head -c 131 /dev/zero | tr '\0' '0'; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n'; } > customer.txt; run "linha com 1 caractere acima do limite" 1 10 5 7
+setup; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\0\n' > customer.txt; run "byte NUL no fim da linha" 1 10 5 7
+setup; printf '7,5,3\n3,2,2\0lixo\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "byte NUL no meio da linha" 1 10 5 7
+setup; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n\0\n' > customer.txt; run "linha so com byte NUL" 1 10 5 7
 
 echo "=== Erros em commands.txt ==="
 setup; rm commands.txt; run "commands ausente" 1 10 5 7
@@ -106,6 +111,9 @@ setup; printf 'RQ 0 0 0 0\nRQ 0 0 0 0\nRQ 0 0 0\n' > commands.txt; run "erro so 
 setup; printf 'RQ 0 0 0 0\nRQ 0 0 0 0\n*\n*\nRL 0 0 0 0\nRQ 1 0 0 0\nRQ 5 0 0 0\n' > commands.txt; run "cliente invalido depois de varios validos" 1 10 5 7
 setup; printf 'RQ 0 0 0 99999999999999999999\n' > commands.txt; run "valor gigante" 1 10 5 7
 setup; head -c 5000 /dev/zero | tr '\0' 'R' > commands.txt; run "linha longa" 1 10 5 7
+setup; printf 'RQ 0 1 2 3\0\n' > commands.txt; run "byte NUL no fim da linha" 1 10 5 7
+setup; printf 'RQ 0 1 2 3\0lixo\n' > commands.txt; run "byte NUL no meio da linha" 1 10 5 7
+setup; printf 'RQ 0 1 2 3\n\0\n' > commands.txt; run "linha so com byte NUL" 1 10 5 7
 
 echo
 echo "RESUMO: $pass OK, $bad FALHOU"

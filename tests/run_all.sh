@@ -15,9 +15,9 @@ echo "##### is_safe (AddressSanitizer e UBSan)"
 [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
 
 for bin in "$ROOT/banker" "$TMP/banker_asan"; do
-    for t in testes_entradas testes_execucao; do
+    for t in testes_entradas testes_execucao testes_aleatorios; do
         echo "##### $t com $(basename "$bin")"
-        BIN=$bin bash "$ROOT/tests/$t.sh" | grep -E "FALHOU|RESUMO|Sanitizer|runtime error"
+        BIN=$bin bash "$ROOT/tests/$t.sh" | grep -E "FALHOU|RESUMO|Sanitizer|runtime error|cobertas"
         [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
     done
 done

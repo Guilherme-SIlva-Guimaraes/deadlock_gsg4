@@ -279,23 +279,19 @@ static int parse_number(char **p, char sep, int *out)
 
 static int read_line(FILE *f, char *buf, size_t cap)
 {
-    size_t len;
+    size_t len = 0;
     int c;
 
-    if (fgets(buf, (int)cap, f) == NULL)
-        return 0;
-    len = strlen(buf);
-    if (len > 0 && buf[len - 1] == '\n') {
-        buf[len - 1] = '\0';
-        return 1;
-    }
-    if (len == cap - 1) {
-        c = fgetc(f);
-        if (c != EOF) {
-            ungetc(c, f);
+    while ((c = fgetc(f)) != EOF && c != '\n') {
+        if (c == '\0')
+            return -2;
+        if (len + 1 >= cap)
             return -1;
-        }
+        buf[len++] = (char)c;
     }
+    if (c == EOF && len == 0)
+        return 0;
+    buf[len] = '\0';
     return 1;
 }
 
@@ -326,6 +322,10 @@ static int read_customers(Input *in)
     }
     while ((status = read_line(f, buf, cap)) != 0) {
         line_no++;
+        if (status == -2) {
+            fail("%s linha %d: byte nulo na linha", CUSTOMER_FILE, line_no);
+            goto done;
+        }
         if (status < 0) {
             fail("%s linha %d: linha longa demais", CUSTOMER_FILE, line_no);
             goto done;
@@ -437,6 +437,10 @@ static int read_commands(Input *in)
     }
     while ((status = read_line(f, buf, cap)) != 0) {
         line_no++;
+        if (status == -2) {
+            fail("%s linha %d: byte nulo na linha", COMMANDS_FILE, line_no);
+            goto done;
+        }
         if (status < 0) {
             fail("%s linha %d: linha longa demais", COMMANDS_FILE, line_no);
             goto done;

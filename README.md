@@ -48,8 +48,15 @@ Compila o programa, compila uma versao com AddressSanitizer e UBSan e roda, com 
 - `tests/testes_entradas.sh`: argumentos invalidos, `customer.txt` e `commands.txt` ausentes ou mal formatados, casos limite.
 - `tests/testes_execucao.sh`: comparacao byte a byte da saida do exemplo do enunciado com `tests/exemplo/result.txt`, casos limite de `RQ`, `RL` e `*`, e erros durante a execucao.
 - `tests/teste_estado.c`: teste unitario da verificacao de estado seguro.
+- `tests/testes_aleatorios.sh` e `tests/teste_aleatorio.py`: gera entradas aleatorias (semente fixa) e compara o `result.txt` com um modelo independente em Python, que decide a seguranca do estado testando todas as ordens possiveis de clientes. Tambem altera bytes de entradas validas para conferir que o programa nunca quebra nem deixa `result.txt` quando termina com erro. Precisa de `python3`; sem ele esta etapa e ignorada.
 
 O comando termina com codigo diferente de zero se algum teste falhar.
+
+Para repetir so a parte aleatoria com outra semente (numero de casos diferenciais e de robustez opcionais):
+
+```
+bash tests/testes_aleatorios.sh 999 400 600
+```
 
 ## Status
 
