@@ -183,9 +183,14 @@ def main():
             else:
                 for chave in cobertura:
                     cobertura[chave] += esperado.count(chave)
+            texto_c = texto_customer(maximo, rng)
+            texto_m = texto_commands(comandos, rng)
+            if rng.random() < 0.3:
+                texto_c = texto_c.replace("\n", "\r\n")
+            if rng.random() < 0.3:
+                texto_m = texto_m.replace("\n", "\r\n")
             rc, out, err, resultado = executar([str(x) for x in total],
-                                               texto_customer(maximo, rng).encode(),
-                                               texto_commands(comandos, rng).encode(), trabalho)
+                                               texto_c.encode(), texto_m.encode(), trabalho)
             if esperado is None:
                 bom = rc == 1 and resultado is None and out == b"" and err.startswith(b"Erro: ")
             else:

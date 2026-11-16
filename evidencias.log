@@ -579,3 +579,93 @@ rm -f banker
 ?? tests/testes_aleatorios.sh
 
 Script done on 2026-11-15 19:52:22-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-16 15:56:04-03:00 [COMMAND="bash /tmp/sessao_crlf.sh" <not executed on terminal>]
+Mon Nov 16 15:56:04 -03 2026
+guilherme
+/mnt/c/Users/guilherme/OneDrive/Documentos/gsg4
+ M README.md
+ M banker.c
+ M tests/teste_aleatorio.py
+ M tests/testes_entradas.sh
+ M tests/testes_execucao.sh
+--- compilacao exigida, sem warnings
+rm -f banker
+gcc -Wall -Wextra -std=c11 -o banker banker.c
+rc=0
+--- compilacao estrita (-pedantic -Wshadow -Wconversion -Wsign-conversion -Wformat=2 -Wnull-dereference -Wlogical-op)
+rc=0
+--- sobras no codigo (cada busca deve nao achar nada)
+sem comentarios
+sem marcadores de depuracao
+todo printf grava em out ou em stderr
+banker.c so tem ASCII
+sem tab e sem espaco no fim de linha
+--- make test (normal e AddressSanitizer com UBSan)
+bash tests/run_all.sh
+##### is_safe (AddressSanitizer e UBSan)
+
+RESUMO: 0 falhas
+##### testes_entradas com banker
+RESUMO: 89 OK, 0 FALHOU
+##### testes_execucao com banker
+RESUMO: 29 OK, 0 FALHOU
+##### testes_aleatorios com banker
+   respostas esperadas cobertas: Allocate=324, Release=697, exceed=98, not enough=492, unsafe=543, MAXIMUM=291, erro RL=31
+RESUMO diferencial: 400 OK, 0 FALHOU (seed 12345)
+RESUMO robustez: 600 OK, 0 FALHOU (seed 12345, 52 entradas ainda validas)
+##### testes_entradas com banker_asan
+RESUMO: 89 OK, 0 FALHOU
+##### testes_execucao com banker_asan
+RESUMO: 29 OK, 0 FALHOU
+##### testes_aleatorios com banker_asan
+   respostas esperadas cobertas: Allocate=324, Release=697, exceed=98, not enough=492, unsafe=543, MAXIMUM=291, erro RL=31
+RESUMO diferencial: 400 OK, 0 FALHOU (seed 12345)
+RESUMO robustez: 600 OK, 0 FALHOU (seed 12345, 52 entradas ainda validas)
+##### TUDO OK
+rc=0
+--- exemplo oficial: diff e cmp contra o result.txt do professor
+diff e cmp sem diferencas: 755 bytes
+--- exemplo oficial com as entradas em CRLF: cmp contra o result.txt do professor
+bytes de customer.txt: 35, linhas com CR: 5
+bytes de commands.txt: 123, linhas com CR: 11
+cmp sem diferencas: 755 bytes, linhas com CR no result.txt: 0
+--- teste aleatorio com outras sementes, AddressSanitizer e UBSan
+   respostas esperadas cobertas: Allocate=641, Release=1424, exceed=218, not enough=947, unsafe=1086, MAXIMUM=631, erro RL=57
+RESUMO diferencial: 800 OK, 0 FALHOU (seed 2024)
+RESUMO robustez: 1200 OK, 0 FALHOU (seed 2024, 99 entradas ainda validas)
+rc=0
+   respostas esperadas cobertas: Allocate=610, Release=1359, exceed=228, not enough=998, unsafe=1103, MAXIMUM=606, erro RL=70
+RESUMO diferencial: 800 OK, 0 FALHOU (seed 31415)
+RESUMO robustez: 1200 OK, 0 FALHOU (seed 31415, 102 entradas ainda validas)
+rc=0
+--- verificacao de que os testes detectam erros (copias com defeitos inseridos)
+defeito 1: if (s->need[i * s->num_resources + j] >= work[j]) {
+   testes_entradas: rc=1 9 casos com [FALHOU]
+   testes_execucao: rc=1 18 casos com [FALHOU]
+   testes_aleatorios: rc=1 51 casos com [FALHOU]
+defeito 2: if (cmd->amount[j] >= s->available[j]) {
+   testes_entradas: rc=0 0 casos com [FALHOU]
+   testes_execucao: rc=1 12 casos com [FALHOU]
+   testes_aleatorios: rc=1 194 casos com [FALHOU]
+defeito 3: if (safe == 5) {
+   testes_entradas: rc=0 0 casos com [FALHOU]
+   testes_execucao: rc=1 6 casos com [FALHOU]
+   testes_aleatorios: rc=1 201 casos com [FALHOU]
+defeito 4: if (c == 1)
+   testes_entradas: rc=1 6 casos com [FALHOU]
+   testes_execucao: rc=0 0 casos com [FALHOU]
+   testes_aleatorios: rc=1 1 casos com [FALHOU]
+defeito 5: if (0)
+   testes_entradas: rc=1 8 casos com [FALHOU]
+   testes_execucao: rc=1 2 casos com [FALHOU]
+   testes_aleatorios: rc=1 177 casos com [FALHOU]
+--- fim
+rm -f banker
+ M README.md
+ M banker.c
+ M evidencias.log
+ M tests/teste_aleatorio.py
+ M tests/testes_entradas.sh
+ M tests/testes_execucao.sh
+
+Script done on 2026-11-16 15:57:40-03:00 [COMMAND_EXIT_CODE="0"]

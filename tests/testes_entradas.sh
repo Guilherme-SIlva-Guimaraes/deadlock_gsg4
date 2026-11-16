@@ -40,6 +40,14 @@ setup; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "custome
 setup; printf '7,5,3\n3,2,2\n\n\n' > customer.txt; printf 'RQ 1 0 0 0\n' > commands.txt; run "linhas em branco no fim do customer" 0 10 5 7
 setup; : > commands.txt; run "commands vazio" 0 10 5 7
 setup; printf 'RQ 4 0 0 0\n' > commands.txt; run "cliente na borda (ultimo)" 0 10 5 7
+setup; printf '7,5,3\r\n3,2,2\r\n9,0,2\r\n2,2,2\r\n4,3,3\r\n' > customer.txt; run "customer.txt em CRLF" 0 10 5 7
+setup; printf '7,5,3\r\n3,2,2\r\n9,0,2\r\n2,2,2\r\n4,3,3' > customer.txt; run "customer.txt em CRLF sem final de linha" 0 10 5 7
+setup; printf '7,5,3\r\n3,2,2\r\n9,0,2\r\n2,2,2\r\n4,3,3\r' > customer.txt; run "customer.txt terminando em CR sem LF" 0 10 5 7
+setup; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n\r\n' > customer.txt; run "customer.txt com linha em branco CRLF no fim" 0 10 5 7
+setup; printf 'RQ 0 0 2 1\r\n*\r\nRL 0 0 1 0\r\n' > commands.txt; run "commands.txt em CRLF" 0 10 5 7
+setup; printf 'RQ 0 0 2 1\r\n*\r' > commands.txt; run "commands.txt terminando em CR sem LF" 0 10 5 7
+setup; printf 'RQ 0 0 0 0\r\n\r\n' > commands.txt; run "commands.txt com linha em branco CRLF no fim" 0 10 5 7
+setup; printf 'RQ 0 0 2 1\r\n' > commands.txt; printf '7,5,3\r\n3,2,2\r\n9,0,2\r\n2,2,2\r\n4,3,3\r\n' > customer.txt; run "os dois arquivos em CRLF" 0 10 5 7
 setup; { head -c 130 /dev/zero | tr '\0' '0'; printf '7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n'; } > customer.txt; run "linha com exatamente o limite de tamanho" 0 10 5 7
 setup; printf 'RQ 0 0 0 0\n*\n\n' > commands.txt; run "commands com branco no fim" 0 10 5 7
 setup; run "argumento INT_MAX" 0 2147483647 5 7
@@ -75,7 +83,11 @@ setup; printf ',7,5,3\n' > customer.txt; run "virgula inicial" 1 10 5 7
 setup; printf '7,,3\n' > customer.txt; run "campo vazio" 1 10 5 7
 setup; printf '7,-5,3\n' > customer.txt; run "valor negativo" 1 10 5 7
 setup; printf '7,a,3\n' > customer.txt; run "valor letra" 1 10 5 7
-setup; printf '7,5,3\r\n3,2,2\r\n' > customer.txt; run "CRLF" 1 10 5 7
+setup; printf '7,5\r,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "CR solto no meio da linha" 1 10 5 7
+setup; printf '7,5,3\n3,2,2\r\r\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "dois CR antes do LF" 1 10 5 7
+setup; printf '7,5,3\n3,2,2 \r\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "espaco antes do CRLF" 1 10 5 7
+setup; printf '7,5,3\n\r\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "linha em branco CRLF no meio" 1 10 5 7
+setup; printf '\r7,5,3\n3,2,2\n9,0,2\n2,2,2\n4,3,3\n' > customer.txt; run "CR no inicio da linha" 1 10 5 7
 setup; printf '7,5,3\n\n3,2,2\n' > customer.txt; run "linha em branco no meio" 1 10 5 7
 setup; printf '7,5,3\n3,2,2\n9,0\n' > customer.txt; run "erro so na ultima linha" 1 10 5 7
 setup; printf '7;5;3\n' > customer.txt; run "separador ponto e virgula" 1 10 5 7
@@ -105,7 +117,11 @@ setup; printf '**\n' > commands.txt; run "dois asteriscos" 1 10 5 7
 setup; printf 'RL\n' > commands.txt; run "RL sem nada" 1 10 5 7
 setup; printf 'RQ 0 1 -2 3\n' > commands.txt; run "valor negativo" 1 10 5 7
 setup; printf 'RQ 0 1 a 3\n' > commands.txt; run "valor letra" 1 10 5 7
-setup; printf 'RQ 0 1 2 3\r\n' > commands.txt; run "CRLF" 1 10 5 7
+setup; printf 'RQ 0 1 2\r 3\n' > commands.txt; run "CR solto no meio da linha" 1 10 5 7
+setup; printf 'RQ 0 1 2 3\r\r\n' > commands.txt; run "dois CR antes do LF" 1 10 5 7
+setup; printf 'RQ 0 1 2 3 \r\n' > commands.txt; run "espaco antes do CRLF" 1 10 5 7
+setup; printf 'RQ 0 1 2 3\n\r\nRL 0 1 1 1\n' > commands.txt; run "linha em branco CRLF no meio" 1 10 5 7
+setup; printf '*\r \n' > commands.txt; run "asterisco com CR e espaco" 1 10 5 7
 setup; printf 'RQ 0 1 2 3\n\nRL 0 1 1 1\n' > commands.txt; run "linha em branco no meio" 1 10 5 7
 setup; printf 'RQ 0 0 0 0\nRQ 0 0 0 0\nRQ 0 0 0\n' > commands.txt; run "erro so na ultima linha" 1 10 5 7
 setup; printf 'RQ 0 0 0 0\nRQ 0 0 0 0\n*\n*\nRL 0 0 0 0\nRQ 1 0 0 0\nRQ 5 0 0 0\n' > commands.txt; run "cliente invalido depois de varios validos" 1 10 5 7

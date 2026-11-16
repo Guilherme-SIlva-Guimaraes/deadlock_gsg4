@@ -291,6 +291,8 @@ static int read_line(FILE *f, char *buf, size_t cap)
     }
     if (c == EOF && len == 0)
         return 0;
+    if (len > 0 && buf[len - 1] == '\r')
+        len--;
     buf[len] = '\0';
     return 1;
 }

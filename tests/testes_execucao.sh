@@ -67,6 +67,27 @@ cmp result.txt "$OFC/result.txt" && echo "        cmp: sem diferencas ($(wc -c <
 if [ "$ok" != OK ]; then diff result.txt esperado.txt | cat -A | head -20; fi
 veredito "$ok"
 
+echo "=== Exemplo oficial com entradas em CRLF, saida deve ser identica ==="
+for modo in "cr no fim de cada linha, sem LF final" "CRLF completo"; do
+    sed 's/$/\r/' "$OFC/customer.txt" > customer.txt
+    sed 's/$/\r/' "$OFC/commands.txt" > commands.txt
+    if [ "$modo" = "CRLF completo" ]; then
+        printf '\n' >> customer.txt
+        printf '\n' >> commands.txt
+    fi
+    rm -f result.txt
+    $BIN 10 5 7 > out.txt 2> err.txt
+    rc=$?
+    ok=OK
+    [ "$rc" -ne 0 ] && ok=FALHOU
+    [ -s out.txt ] && ok=FALHOU
+    [ -s err.txt ] && ok=FALHOU
+    cmp -s result.txt "$OFC/result.txt" || ok=FALHOU
+    printf '[%s] oficial em CRLF (%s), cmp contra o result.txt do professor | exit=%s | customer.txt tem %s CR\n' "$ok" "$modo" "$rc" "$(grep -c "$(printf '\r')" customer.txt)"
+    [ "$ok" != OK ] && sed 's/^/        stderr: /' err.txt
+    veredito "$ok"
+done
+
 echo "=== Casos limite de RQ e RL ==="
 caso "RQ igual ao need (borda D == P)" "5" "5\n" "RQ 0 5\n" "Allocate to customer 0 the resources 5\n"
 caso "RQ maior que o need por 1" "9" "5\n" "RQ 0 6\n" "The customer 0 request 6 was denied because exceed its maximum allocation\n"

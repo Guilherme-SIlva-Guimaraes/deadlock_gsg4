@@ -29,7 +29,9 @@ O programa le dois arquivos do diretorio atual:
 - `customer.txt`: uma linha por cliente, com o maximo de cada recurso separado por virgula. Exemplo: `7,5,3`.
 - `commands.txt`: um comando por linha. `RQ <cliente> <r1> <r2> ...` pede recursos, `RL <cliente> <r1> <r2> ...` libera recursos e `*` imprime o estado atual.
 
-O resultado e gravado em `result.txt`.
+Os dois arquivos podem usar fim de linha LF ou CRLF (um `\r` imediatamente antes do `\n`, ou no fim do arquivo, e ignorado). Um `\r` em qualquer outro lugar da linha e um byte nulo sao erro.
+
+O resultado e gravado em `result.txt`, sempre com fim de linha LF.
 
 ## Erros
 
